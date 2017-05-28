@@ -1,44 +1,46 @@
-var NoDuplicatesBST = function(array) {
-  var tempArr = arguments[0].sort(function(a, b) {
-    return a-b;
-  });
-  var middle = Math.floor(((tempArr.length - 1) / 2));
-  var sliced = tempArr.splice(middle, 1);
-  
-  this.createBST(sliced[0]);
-      
-  // now insert the rest of tempArr into the BST
-  for (var i = 0; i < tempArr.length; i++) {
-    this.insert(tempArr[i]);
-  }
-};
+// NOTES: the node needs to have the methods
 
-NoDuplicatesBST.prototype.createBST = function(number) {
-  this.value = number;
+// node constructor
+var bstNode = function(value) {
+  this.value = value;
   this.left = null;
   this.right = null;
 };
 
-NoDuplicatesBST.prototype.insert = function(number) {
-  if (number < this.value) {
+bstNode.prototype.insert = function(node) {
+  if (node.value < this.value) {
     if (this.left === null) {
-      this.left = new this.createBST(number);
-      console.log(this)
+      this.left = node;
     } else {
-    // ------------CODE BELOW DOES NOT WORK!, LINED 77 ALSO PROBABLY. TypeError: this.left.insert is not a function----------------------
-      this.left.insert(number);
+      this.left.insert(node);
     }
-  } else if (number > this.value) {
+  }
+
+  if (node.value > this.value) {
     if (this.right === null) {
-      this.right = new this.createBST(number);
+      this.right = node;
     } else {
-      this.right.insert(number);
+      this.right.insert(node);
     }
-  } else {
-    // Do nothing
   }
 };
 
-var testBST = new NoDuplicatesBST([2,3,4,5,1]);
+var NoDuplicateBst = function(array) {
+  this.root = null;
+
+  var tempArr = array.sort(function(a, b) {
+    return a-b;
+  });
+  var middleIndex = Math.floor(((tempArr.length - 1) / 2));
+  this.root = new bstNode(tempArr.splice(middleIndex, 1)[0]);
+  var self = this;
+  tempArr.forEach(function(value) {
+    var node = new bstNode(value);
+    self.root.insert(node);
+  });
+
+};
+
+var testBST = new NoDuplicateBst([2,3,4,5,1]);
 
 console.log("The testBST:", testBST);
